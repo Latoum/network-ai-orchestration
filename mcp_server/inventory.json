@@ -1,0 +1,98 @@
+{
+  "fabric": "ai-pod-01",
+  "site": "DC1",
+  "devices": [
+    {
+      "hostname": "spine-01", "mgmt_ip": "10.0.0.1", "model": "Nexus 9364C", "os": "NX-OS 10.3", "role": "spine", "site": "DC1",
+      "interfaces": [
+        {"name": "Eth1/1", "desc": "to leaf-01", "admin": "up", "oper": "up", "speed": "100G", "in_errors": 0, "out_errors": 0, "mtu": 9216},
+        {"name": "Eth1/2", "desc": "to leaf-02", "admin": "up", "oper": "up", "speed": "100G", "in_errors": 0, "out_errors": 0, "mtu": 9216},
+        {"name": "Eth1/3", "desc": "to leaf-03", "admin": "up", "oper": "up", "speed": "100G", "in_errors": 0, "out_errors": 0, "mtu": 9216}
+      ],
+      "bgp_neighbors": [
+        {"peer": "10.0.0.11", "asn": 65001, "state": "Established", "afi": "l2vpn evpn"},
+        {"peer": "10.0.0.12", "asn": 65001, "state": "Established", "afi": "l2vpn evpn"},
+        {"peer": "10.0.0.13", "asn": 65001, "state": "Established", "afi": "l2vpn evpn"}
+      ],
+      "lldp": ["leaf-01", "leaf-02", "leaf-03"],
+      "env": {"power": "ok", "temp": "ok", "fans": "ok"},
+      "running_config": [
+        "feature bgp", "feature nv overlay", "router bgp 65000", "  address-family l2vpn evpn",
+        "  neighbor 10.0.0.11 remote-as 65001", "  route-reflector-client",
+        "system jumbomtu 9216"
+      ]
+    },
+    {
+      "hostname": "spine-02", "mgmt_ip": "10.0.0.2", "model": "Nexus 9364C", "os": "NX-OS 10.3", "role": "spine", "site": "DC1",
+      "interfaces": [
+        {"name": "Eth1/1", "desc": "to leaf-01", "admin": "up", "oper": "up", "speed": "100G", "in_errors": 0, "out_errors": 0, "mtu": 9216},
+        {"name": "Eth1/2", "desc": "to leaf-02", "admin": "up", "oper": "up", "speed": "100G", "in_errors": 0, "out_errors": 0, "mtu": 9216},
+        {"name": "Eth1/3", "desc": "to leaf-03", "admin": "up", "oper": "up", "speed": "100G", "in_errors": 0, "out_errors": 0, "mtu": 9216}
+      ],
+      "bgp_neighbors": [
+        {"peer": "10.0.0.11", "asn": 65001, "state": "Established", "afi": "l2vpn evpn"},
+        {"peer": "10.0.0.12", "asn": 65001, "state": "Established", "afi": "l2vpn evpn"},
+        {"peer": "10.0.0.13", "asn": 65001, "state": "Established", "afi": "l2vpn evpn"}
+      ],
+      "lldp": ["leaf-01", "leaf-02", "leaf-03"],
+      "env": {"power": "ok", "temp": "ok", "fans": "ok"},
+      "running_config": ["feature bgp", "feature nv overlay", "router bgp 65000", "system jumbomtu 9216"]
+    },
+    {
+      "hostname": "leaf-01", "mgmt_ip": "10.0.0.11", "model": "Nexus 93180YC-FX", "os": "NX-OS 10.3", "role": "leaf", "site": "DC1",
+      "interfaces": [
+        {"name": "Eth1/49", "desc": "to spine-01", "admin": "up", "oper": "up", "speed": "100G", "in_errors": 0, "out_errors": 0, "mtu": 9216},
+        {"name": "Eth1/50", "desc": "to spine-02", "admin": "up", "oper": "up", "speed": "100G", "in_errors": 0, "out_errors": 0, "mtu": 9216},
+        {"name": "Eth1/1", "desc": "gpu-node-01 RoCEv2", "admin": "up", "oper": "up", "speed": "100G", "in_errors": 0, "out_errors": 0, "mtu": 9216}
+      ],
+      "bgp_neighbors": [
+        {"peer": "10.0.0.1", "asn": 65000, "state": "Established", "afi": "l2vpn evpn"},
+        {"peer": "10.0.0.2", "asn": 65000, "state": "Established", "afi": "l2vpn evpn"}
+      ],
+      "lldp": ["spine-01", "spine-02"],
+      "env": {"power": "ok", "temp": "ok", "fans": "ok"},
+      "running_config": [
+        "feature bgp", "feature nv overlay", "feature vn-segment-vlan-based",
+        "interface nve1", "  source-interface loopback1", "  member vni 10100 mcast-group 239.1.1.1",
+        "vlan 100", "  vn-segment 10100", "interface Vlan100", "  ip address 10.1.100.1/24",
+        "  fabric forwarding mode anycast-gateway", "system jumbomtu 9216"
+      ]
+    },
+    {
+      "hostname": "leaf-02", "mgmt_ip": "10.0.0.12", "model": "Nexus 93180YC-FX", "os": "NX-OS 10.3", "role": "leaf", "site": "DC1",
+      "interfaces": [
+        {"name": "Eth1/49", "desc": "to spine-01", "admin": "up", "oper": "up", "speed": "100G", "in_errors": 0, "out_errors": 0, "mtu": 9216},
+        {"name": "Eth1/50", "desc": "to spine-02", "admin": "up", "oper": "down", "speed": "100G", "in_errors": 14302, "out_errors": 0, "mtu": 9216},
+        {"name": "Eth1/2", "desc": "gpu-node-04 RoCEv2", "admin": "up", "oper": "up", "speed": "100G", "in_errors": 0, "out_errors": 0, "mtu": 1500}
+      ],
+      "bgp_neighbors": [
+        {"peer": "10.0.0.1", "asn": 65000, "state": "Established", "afi": "l2vpn evpn"},
+        {"peer": "10.0.0.2", "asn": 65000, "state": "Idle", "afi": "l2vpn evpn"}
+      ],
+      "lldp": ["spine-01"],
+      "env": {"power": "ok", "temp": "warning", "fans": "ok"},
+      "running_config": [
+        "feature bgp", "feature nv overlay", "interface nve1", "  source-interface loopback1",
+        "  member vni 10100 mcast-group 239.1.1.1", "interface Vlan100",
+        "  fabric forwarding mode anycast-gateway", "system jumbomtu 9216"
+      ]
+    },
+    {
+      "hostname": "border-leaf-01", "mgmt_ip": "10.0.0.13", "model": "Nexus 9336C-FX2", "os": "NX-OS 10.3", "role": "border", "site": "DC1",
+      "interfaces": [
+        {"name": "Eth1/49", "desc": "to spine-01", "admin": "up", "oper": "up", "speed": "100G", "in_errors": 0, "out_errors": 0, "mtu": 9216},
+        {"name": "Eth1/36", "desc": "to wan-edge", "admin": "up", "oper": "up", "speed": "40G", "in_errors": 0, "out_errors": 2, "mtu": 1500}
+      ],
+      "bgp_neighbors": [
+        {"peer": "10.0.0.1", "asn": 65000, "state": "Established", "afi": "l2vpn evpn"},
+        {"peer": "172.16.0.1", "asn": 64512, "state": "Established", "afi": "ipv4 unicast"}
+      ],
+      "lldp": ["spine-01", "wan-edge"],
+      "env": {"power": "ok", "temp": "ok", "fans": "ok"},
+      "running_config": [
+        "feature bgp", "vrf context TENANT-A", "router bgp 65000", "  vrf TENANT-A",
+        "    address-family ipv4 unicast", "    advertise l2vpn evpn", "system jumbomtu 9216"
+      ]
+    }
+  ]
+}
