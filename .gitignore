@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.chroma/
+chroma_store/
+_pipinstall.log
+.DS_Store
